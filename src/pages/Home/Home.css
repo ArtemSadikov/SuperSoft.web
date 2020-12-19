@@ -14,6 +14,7 @@
 }
 
 .home-page-container {
+  width: 100%;
   height: 100%;
 }
 
@@ -52,4 +53,117 @@
 .selected-project {
   transition: 250ms;
   opacity: 1;
+}
+
+.project-description-wrapper {
+  display: flex;
+  padding-top: 50px;
+  padding-left: 75px;
+  padding-right: 75px;
+  flex-direction: column;
+  flex: 1;
+}
+
+.project-description-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 50px;
+}
+
+.project-description-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-items: center;
+  justify-content: space-between;
+}
+
+.project-description-title-image {
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+  margin-right: 10px;
+}
+
+.project-description-title-text {
+  font-weight: 550;
+  font-size: 18px;
+  line-height: 18px;
+}
+
+.project-description-text {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 16px;
+  opacity: 0.6;
+}
+
+.project-description-container-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.project-description-container {
+  display: flex;
+  margin-right: 10px;
+  flex: 1;
+}
+
+.project-members-list-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.project-members-list-title {
+  font-style: normal;
+  font-weight: 550;
+  font-size: 16px;
+  line-height: 16px;
+  opacity: 0.6;
+  margin-bottom: 20px;
+}
+
+.project-member-name-text {
+  display: flex;
+  flex: 1;
+  font-size: 12px;
+  line-height: 12px;
+  opacity: 0.4;
+  margin-bottom: 18px;
+}
+
+.project-description-header-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 31px;
+  height: 5px;
+  border: none;
+  background-color: transparent;
+  outline: none;
+}
+
+.project-description-header-button-image {
+  width: 100%;
+  height: 100%;
+}
+
+.project-view-tasks-button {
+  position: absolute;
+  right: 250px;
+  bottom: 100px;
+  padding: 18px 32px;
+  outline: none;
+  border: none;
+  background-color: #A1C4FD;
+  border-radius: 0 59px 0 42px;
+  box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.project-view-tasks-button-text {
+  font-weight: 550;
 }

@@ -1,10 +1,12 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {PageContainer} from '../../components';
 import avatar from '../../assets/images/logo192.png';
 import './Home.css';
-import {FAKE_PROJECTS, IProject, IUser} from '../../utils';
+import {IProject, IUser} from '../../utils';
 import THREE_DOTS from '../../assets/images/менюка.png';
 import {Link} from 'react-router-dom';
+import {useProject} from '../../redux/selectors';
+import {useFetch} from '../../hooks';
 
 interface ProjectItemInterface {
   item: IProject;
@@ -25,7 +27,6 @@ const ProjectItem = (props: ProjectItemInterface) => {
   }, [selected]);
 
   const handleOnSelect = useCallback(() => {
-    console.log('item.id', item.id);
     onSelect(item.id);
   }, [item.id, onSelect]);
 
@@ -43,29 +44,43 @@ const ProjectItem = (props: ProjectItemInterface) => {
 };
 
 export const Home = () => {
-  const [selectedProject, setSelectedProject] = useState<IProject>(FAKE_PROJECTS[0]);
-  const [projects, setProjects] = useState<IProject[]>(FAKE_PROJECTS);
+  const {setProject} = useProject();
+  const [requestProjects, projects] = useFetch<IProject[]>();
+  const [selectedProject, setSelectedProject] = useState<IProject>();
 
   const handleOnAddProjectPress = useCallback(() => {
   }, []);
 
-  const handleOnSelect = useCallback((id: number) => {
-    const project = projects.find((project) => project.id === id);
-    if (project) {
-      setSelectedProject(project);
+  useEffect(() => {
+    requestProjects('/checkProjects');
+    if (projects && projects.length !== 0) {
+      setSelectedProject(projects[0]);
     }
-  }, [projects]);
+  }, []);
+
+  const handleOnSelect = useCallback((id: number) => {
+    if (projects) {
+      const project = projects.find((project) => project.id === id);
+      if (project) {
+        setSelectedProject(project);
+        setProject(project.id);
+      }
+    }
+  }, [projects, setProject]);
 
   const renderProject = useCallback((item: IProject) => {
-    console.log(selectedProject.id);
-    return (
-      <ProjectItem key={item.id}
-                   onSelect={handleOnSelect}
-                   item={item}
-                   selected={item.id === selectedProject.id}
-      />
-    );
-  }, [handleOnSelect, selectedProject.id]);
+    if (selectedProject) {
+      return (
+        <ProjectItem key={item.id}
+                     onSelect={handleOnSelect}
+                     item={item}
+                     selected={item.id === selectedProject.id}
+        />
+      );
+    }
+
+    return null;
+  }, [handleOnSelect, selectedProject]);
 
   const renderMember = useCallback((member: IUser) => {
     return (
@@ -73,56 +88,57 @@ export const Home = () => {
     );
   }, []);
 
-  const onViewTasksClick = useCallback(() => {
-
-  }, []);
-
   return (
     <PageContainer title="Projects"
                    onAddIconPress={handleOnAddProjectPress}
                    userImage={avatar}>
       <div className="projects-list-container">
-        <ul className="projects-list">
-          {projects.map(renderProject)}
-        </ul>
+        {projects && (
+          <ul className="projects-list">
+            {projects.map(renderProject)}
+          </ul>
+        )}
       </div>
-      <div className="project-description-wrapper">
-        <div className="project-description-header">
-          <div className="project-description-title">
-            <img alt={selectedProject.id.toString()}
-                 src={selectedProject.image}
-                 className="project-description-title-image"
-            />
-            <text className="project-description-title-text">{selectedProject.name}</text>
-          </div>
+      {selectedProject && (
+        <>
+          <div className="project-description-wrapper">
+            <div className="project-description-header">
+              <div className="project-description-title">
+                <img alt={selectedProject.id.toString()}
+                     src={selectedProject.image}
+                     className="project-description-title-image"
+                />
+                <text className="project-description-title-text">{selectedProject.name}</text>
+              </div>
 
-          <button className="project-description-header-button">
-            <img className="project-description-header-button-image"
-                 src={THREE_DOTS}
-                 alt="menu"/>
-          </button>
-        </div>
-
-        <div className="project-description-container-wrapper">
-          <div className="project-description-container">
-            <p className="project-description-text">{selectedProject.description}</p>
-          </div>
-
-          {selectedProject.members && (
-            <div className="project-members-list-wrapper">
-              <text className="project-members-list-title">Members</text>
-              {selectedProject.members.map(renderMember)}
+              <button className="project-description-header-button">
+                <img className="project-description-header-button-image"
+                     src={THREE_DOTS}
+                     alt="menu"/>
+              </button>
             </div>
-          )}
-        </div>
-      </div>
 
-      <Link to="/tasks">
-        <button onClick={onViewTasksClick}
-                className="project-view-tasks-button">
-          <text className="project-view-tasks-button-text">View tasks</text>
-        </button>
-      </Link>
+            <div className="project-description-container-wrapper">
+              <div className="project-description-container">
+                <p className="project-description-text">{selectedProject.description}</p>
+              </div>
+
+              {selectedProject.members && (
+                <div className="project-members-list-wrapper">
+                  <text className="project-members-list-title">Members</text>
+                  {selectedProject.members.map(renderMember)}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <Link to="/tasks">
+            <div className="project-view-tasks-button">
+              <text className="project-view-tasks-button-text">View tasks</text>
+            </div>
+          </Link>
+        </>
+      )}
     </PageContainer>
   );
 };

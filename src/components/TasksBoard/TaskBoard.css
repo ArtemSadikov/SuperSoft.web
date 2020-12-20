@@ -1,0 +1,37 @@
+.tasksBoard-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: #fff;
+  border: 1px black;
+  padding: 0 40px;
+  overflow-y: scroll;
+}
+
+.tasksBoard-task-container {
+  overflow: visible;
+  width: 100%;
+}
+
+.tasksBoard-title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.tasksBoard-title-text {
+  font-weight: 550;
+  opacity: 0.6;
+}
+
+.tasksBoard-title-text-count {
+  font-weight: 550;
+  opacity: 0.6;
+}
+
+.tasksBoard-tasks-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
